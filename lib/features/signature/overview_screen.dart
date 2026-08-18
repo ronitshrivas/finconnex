@@ -39,18 +39,30 @@ class _SignatureOverviewScreenState extends State<SignatureOverviewScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 14, 8, 0),
                   child: Row(
                     children: [
-                      _tabBtn('Recent Documents', 0),
-                      const SizedBox(width: 24),
-                      _tabBtn('Recent Templates', 1),
-                      const Spacer(),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              _tabBtn('Recent Documents', 0),
+                              const SizedBox(width: 24),
+                              _tabBtn('Recent Templates', 1),
+                            ],
+                          ),
+                        ),
+                      ),
                       TextButton.icon(
                         onPressed: () {},
-                        icon: const Icon(Icons.arrow_forward, size: 14, color: AppColors.primary),
+                        icon: const Icon(Icons.arrow_forward,
+                            size: 14, color: AppColors.primary),
                         label: const Text('View all',
-                            style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w500)),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w500)),
                       ),
                     ],
                   ),
@@ -66,29 +78,25 @@ class _SignatureOverviewScreenState extends State<SignatureOverviewScreen> {
                 Divider(height: 1, color: AppPalette.of(context).border),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Row(
-                    children: [
-                      const Text('Showing 1 to 4 of 4 documents',
-                          style: TextStyle(fontSize: 12, color: AppColors.mutedForeground)),
-                      const Spacer(),
-                      _pageBtn('«'),
-                      const SizedBox(width: 4),
-                      _pageBtn('‹'),
-                      const SizedBox(width: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(6),
+                  child: mobile
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const Text('Showing 1 to 4 of 4 documents',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12, color: AppColors.mutedForeground)),
+                            const SizedBox(height: 8),
+                            _pagerBar(),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            const Text('Showing 1 to 4 of 4 documents',
+                                style: TextStyle(fontSize: 12, color: AppColors.mutedForeground)),
+                            const Spacer(),
+                            _pagerBar(),
+                          ],
                         ),
-                        child: const Text('1', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
-                      ),
-                      const SizedBox(width: 4),
-                      _pageBtn('›'),
-                      const SizedBox(width: 4),
-                      _pageBtn('»'),
-                    ],
-                  ),
                 ),
               ],
             ),
@@ -121,6 +129,33 @@ class _SignatureOverviewScreenState extends State<SignatureOverviewScreen> {
       ),
     );
   }
+
+  Widget _pagerBar() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _pageBtn('«'),
+          const SizedBox(width: 4),
+          _pageBtn('‹'),
+          const SizedBox(width: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: const Text('1',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600)),
+          ),
+          const SizedBox(width: 4),
+          _pageBtn('›'),
+          const SizedBox(width: 4),
+          _pageBtn('»'),
+        ],
+      );
 
   Widget _pageBtn(String s) => Container(
         width: 28,
@@ -334,18 +369,17 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (mobile) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(children: [
-            Expanded(child: PrimaryButton(label: 'Send for Signature', icon: Icons.send, onPressed: () {})),
-          ]),
-          const SizedBox(height: 8),
-          Row(children: [
-            Expanded(child: SecondaryButton(label: 'Sign Yourself', icon: Icons.edit_outlined, onPressed: () {})),
-          ]),
-        ],
-      );
+      return Row(children: [
+        Expanded(
+            child: PrimaryButton(
+                label: 'Send', icon: Icons.send, onPressed: () {})),
+        const SizedBox(width: 8),
+        Expanded(
+            child: SecondaryButton(
+                label: 'Sign yourself',
+                icon: Icons.edit_outlined,
+                onPressed: () {})),
+      ]);
     }
     return Row(
       children: [

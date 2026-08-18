@@ -19,13 +19,7 @@ class TimeTrackingScreen extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.all(pad),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          const Text('Time Tracking', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-          const Spacer(),
-          SecondaryButton(label: 'Export timesheet', icon: Icons.file_download_outlined, onPressed: () {}),
-          const SizedBox(width: 10),
-          PrimaryButton(label: 'Log time', icon: Icons.add, onPressed: () {}),
-        ]),
+        _header(mobile),
         const SizedBox(height: 12),
         LayoutBuilder(builder: (ctx, cn) {
           final wide = cn.maxWidth >= 900;
@@ -85,6 +79,38 @@ class TimeTrackingScreen extends StatelessWidget {
         if (mobile) _mobile(context) else _table(context),
       ]),
     );
+  }
+
+  Widget _header(bool mobile) {
+    if (mobile) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Text('Time Tracking',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 12),
+        Row(children: [
+          Expanded(
+              child: PrimaryButton(
+                  label: 'Log time', icon: Icons.add, onPressed: () {})),
+          const SizedBox(width: 8),
+          Expanded(
+              child: SecondaryButton(
+                  label: 'Export',
+                  icon: Icons.file_download_outlined,
+                  onPressed: () {})),
+        ]),
+      ]);
+    }
+    return Row(children: [
+      const Text('Time Tracking',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      const Spacer(),
+      SecondaryButton(
+          label: 'Export timesheet',
+          icon: Icons.file_download_outlined,
+          onPressed: () {}),
+      const SizedBox(width: 10),
+      PrimaryButton(label: 'Log time', icon: Icons.add, onPressed: () {}),
+    ]);
   }
 
   Widget _dropField(BuildContext c, String s) {

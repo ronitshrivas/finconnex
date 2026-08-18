@@ -25,7 +25,14 @@ class PrimaryButton extends StatelessWidget {
             Icon(icon, size: 16),
             const SizedBox(width: 8),
           ],
-          Text(label),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            ),
+          ),
         ],
       ),
     );
@@ -60,7 +67,15 @@ class SecondaryButton extends StatelessWidget {
             Icon(icon, size: 16, color: AppColors.foreground),
             const SizedBox(width: 8),
           ],
-          Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            ),
+          ),
         ],
       ),
     );

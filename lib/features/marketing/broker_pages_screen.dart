@@ -32,7 +32,9 @@ class _BrokerPagesScreenState extends State<BrokerPagesScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(children: [
-            const Text('Broker pages', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+            Text('Broker pages',
+                style: TextStyle(
+                    fontSize: mobile ? 20 : 22, fontWeight: FontWeight.w700)),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -40,7 +42,7 @@ class _BrokerPagesScreenState extends State<BrokerPagesScreen> {
               child: Text('${kBrokerPages.length}', style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
             ),
             const Spacer(),
-            PrimaryButton(label: 'New page', icon: Icons.add, onPressed: () {}),
+            PrimaryButton(label: mobile ? 'New' : 'New page', icon: Icons.add, onPressed: () {}),
           ]),
           const SizedBox(height: 16),
           Row(children: [

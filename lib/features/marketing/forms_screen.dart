@@ -32,7 +32,9 @@ class _FormsScreenState extends State<FormsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(children: [
-            const Text('Forms', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+            Text('Forms',
+                style: TextStyle(
+                    fontSize: mobile ? 20 : 22, fontWeight: FontWeight.w700)),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -40,7 +42,7 @@ class _FormsScreenState extends State<FormsScreen> {
               child: Text('${kForms.length}', style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
             ),
             const Spacer(),
-            PrimaryButton(label: 'New form', icon: Icons.add, onPressed: () {}),
+            PrimaryButton(label: mobile ? 'New' : 'New form', icon: Icons.add, onPressed: () {}),
           ]),
           const SizedBox(height: 16),
           Row(children: [

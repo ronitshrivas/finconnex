@@ -19,13 +19,37 @@ class PaymentsScreen extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.all(pad),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          const Text('Payments', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-          const Spacer(),
-          SecondaryButton(label: 'Export', icon: Icons.file_download_outlined, onPressed: () {}),
-          const SizedBox(width: 10),
-          PrimaryButton(label: 'Record payment', icon: Icons.add, onPressed: () {}),
-        ]),
+        mobile
+            ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Payments',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 12),
+                Row(children: [
+                  Expanded(
+                      child: PrimaryButton(
+                          label: 'Record',
+                          icon: Icons.add,
+                          onPressed: () {})),
+                  const SizedBox(width: 8),
+                  Expanded(
+                      child: SecondaryButton(
+                          label: 'Export',
+                          icon: Icons.file_download_outlined,
+                          onPressed: () {})),
+                ]),
+              ])
+            : Row(children: [
+                const Text('Payments',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+                const Spacer(),
+                SecondaryButton(
+                    label: 'Export',
+                    icon: Icons.file_download_outlined,
+                    onPressed: () {}),
+                const SizedBox(width: 10),
+                PrimaryButton(
+                    label: 'Record payment', icon: Icons.add, onPressed: () {}),
+              ]),
         const SizedBox(height: 12),
         SingleChildScrollView(scrollDirection: Axis.horizontal, child: Row(children: [
           FilterTab(label: 'All', count: 3, selected: true, onTap: () {}), const SizedBox(width: 8),
@@ -83,18 +107,33 @@ class ItemsScreen extends StatelessWidget {
       padding: EdgeInsets.all(pad),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
-          const Text('Items / Services', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-          const Spacer(),
-          PrimaryButton(label: 'Add item', icon: Icons.add, onPressed: () {}),
+          Expanded(
+            child: Text(mobile ? 'Items' : 'Items / Services',
+                style: TextStyle(
+                    fontSize: mobile ? 20 : 22,
+                    fontWeight: FontWeight.w700)),
+          ),
+          PrimaryButton(
+              label: mobile ? 'Add' : 'Add item',
+              icon: Icons.add,
+              onPressed: () {}),
         ]),
         const SizedBox(height: 12),
-        Row(children: [
-          FilterTab(label: 'All', count: 5, selected: true, onTap: () {}), const SizedBox(width: 8),
-          FilterTab(label: 'Active', selected: false, onTap: () {}), const SizedBox(width: 8),
-          FilterTab(label: 'Inactive', selected: false, onTap: () {}),
-          const Spacer(),
-          SearchField(hint: 'Search catalogue...', width: mobile ? null : 240, onChanged: (_) {}),
-        ]),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: [
+            FilterTab(label: 'All', count: 5, selected: true, onTap: () {}),
+            const SizedBox(width: 8),
+            FilterTab(label: 'Active', selected: false, onTap: () {}),
+            const SizedBox(width: 8),
+            FilterTab(label: 'Inactive', selected: false, onTap: () {}),
+          ]),
+        ),
+        const SizedBox(height: 12),
+        SearchField(
+            hint: 'Search catalogue...',
+            width: mobile ? null : 240,
+            onChanged: (_) {}),
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(color: p.card, border: Border.all(color: p.border), borderRadius: BorderRadius.circular(12)),

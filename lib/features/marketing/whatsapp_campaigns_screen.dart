@@ -31,19 +31,31 @@ class _WhatsAppCampaignsScreenState extends State<WhatsAppCampaignsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(children: [
-            const Text('WhatsApp Campaigns', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(color: AppColors.primarySoft, borderRadius: BorderRadius.circular(999)),
-              child: Text('${kWaCampaigns.length}', style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
-            ),
-            const Spacer(),
-            SecondaryButton(label: 'Export', icon: Icons.file_download_outlined, onPressed: () {}),
-            const SizedBox(width: 10),
-            PrimaryButton(label: 'New campaign', icon: Icons.add, onPressed: () {}),
-          ]),
+          mobile
+              ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    const Expanded(
+                      child: Text('WhatsApp',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                    ),
+                    _countChip(kWaCampaigns.length),
+                  ]),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    Expanded(child: PrimaryButton(label: 'New', icon: Icons.add, onPressed: () {})),
+                    const SizedBox(width: 8),
+                    Expanded(child: SecondaryButton(label: 'Export', icon: Icons.file_download_outlined, onPressed: () {})),
+                  ]),
+                ])
+              : Row(children: [
+                  const Text('WhatsApp Campaigns', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+                  const SizedBox(width: 8),
+                  _countChip(kWaCampaigns.length),
+                  const Spacer(),
+                  SecondaryButton(label: 'Export', icon: Icons.file_download_outlined, onPressed: () {}),
+                  const SizedBox(width: 10),
+                  PrimaryButton(label: 'New campaign', icon: Icons.add, onPressed: () {}),
+                ]),
           const SizedBox(height: 16),
           Row(children: [
             Container(
@@ -68,6 +80,18 @@ class _WhatsAppCampaignsScreenState extends State<WhatsAppCampaignsScreen> {
       ),
     );
   }
+
+  Widget _countChip(int n) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+            color: AppColors.primarySoft,
+            borderRadius: BorderRadius.circular(999)),
+        child: Text('$n',
+            style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600)),
+      );
 
   Widget _table() {
     TextStyle head() => const TextStyle(

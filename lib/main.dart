@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'features/activities/activities_screen.dart';
+import 'features/activities/attachments_reminders_screens.dart';
+import 'features/activities/calls_emails_screens.dart';
+import 'features/activities/meetings_notes_screens.dart';
+import 'features/booking/booking_more_screens.dart';
 import 'features/booking/booking_screen.dart';
 import 'features/calendar/calendar_screen.dart';
 import 'features/client_portal/client_portal_screen.dart';
 import 'features/dashboard/dashboard_screen.dart';
 import 'features/documents/library_screen.dart';
 import 'features/documents/requests_screen.dart';
-import 'features/messages/messages_screen.dart';
-import 'features/settings/settings_screen.dart';
 import 'features/finance/estimates_screen.dart';
 import 'features/finance/hub_screen.dart';
 import 'features/finance/invoices_screen.dart';
@@ -22,19 +24,27 @@ import 'features/marketing/email_campaigns_screen.dart';
 import 'features/marketing/forms_screen.dart';
 import 'features/marketing/sms_campaigns_screen.dart';
 import 'features/marketing/whatsapp_campaigns_screen.dart';
+import 'features/messages/messages_screen.dart';
 import 'features/ops/analytics_screen.dart';
 import 'features/ops/reports_screen.dart';
 import 'features/ops/resources_screen.dart';
 import 'features/ops/support_screen.dart';
 import 'features/ops/team_screen.dart';
 import 'features/ops/time_tracking_screen.dart';
+import 'features/sales/companies_screen.dart';
+import 'features/sales/contacts_screen.dart';
+import 'features/sales/forecasting_screen.dart';
+import 'features/sales/leads_screen.dart';
 import 'features/sales/sales_screen.dart';
+import 'features/settings/settings_screen.dart';
 import 'features/shell/app_shell.dart';
 import 'features/shell/nav_items.dart';
 import 'features/shell/placeholder_screen.dart';
 import 'features/signature/documents_screen.dart';
 import 'features/signature/overview_screen.dart';
 import 'features/signature/templates_screen.dart';
+import 'features/tools/calculator_screen.dart';
+import 'features/tools/journeys_rules_screens.dart';
 import 'features/work_queue/work_queue_screen.dart';
 
 void main() {
@@ -89,24 +99,56 @@ class _AppRootState extends State<_AppRoot> {
         return const DashboardScreen();
       case '/work-queue':
         return const WorkQueueScreen();
+      // Sales
       case '/sales':
       case '/sales/deals':
         return const SalesScreen();
+      case '/sales/leads':
+        return const LeadsScreen();
+      case '/sales/contacts':
+        return const ContactsScreen();
+      case '/sales/companies':
+        return const CompaniesScreen();
+      case '/sales/forecasting':
+        return const ForecastingScreen();
+      // Activities
       case '/activities':
       case '/activities/tasks':
         return const ActivitiesScreen();
+      case '/activities/calls':
+        return const CallsScreen();
+      case '/activities/emails':
+        return const EmailsScreen();
+      case '/activities/meetings':
+        return const MeetingsScreen();
+      case '/activities/notes':
+        return const NotesScreen();
+      case '/activities/attachments':
+        return const AttachmentsScreen();
+      case '/activities/reminders':
+        return const RemindersScreen();
+      // Booking
       case '/booking':
         return const BookingScreen();
+      case '/booking/consultations':
+        return const ConsultationsScreen();
+      case '/booking/schedules':
+        return const SchedulesScreen();
+      case '/booking/consultants':
+        return const ConsultantsScreen();
+      // Documents
       case '/documents/library':
         return const LibraryScreen();
       case '/documents/requests':
         return const DocumentRequestsScreen();
+      // E-Signature
       case '/signature':
         return const SignatureOverviewScreen();
       case '/signature/documents':
         return const SignatureDocumentsScreen();
       case '/signature/templates':
         return const SignatureTemplatesScreen();
+      // Marketing
       case '/marketing/email':
         return const EmailCampaignsScreen();
       case '/marketing/sms':
@@ -117,6 +159,7 @@ class _AppRootState extends State<_AppRoot> {
         return const FormsScreen();
       case '/marketing/linktree':
         return const BrokerPagesScreen();
+      // Finance
       case '/finance':
         return const FinanceHubScreen();
       case '/finance/estimates':
@@ -129,6 +172,7 @@ class _AppRootState extends State<_AppRoot> {
         return const PaymentsScreen();
       case '/finance/products':
         return const ItemsScreen();
+      // Other top-level
       case '/portals':
         return const ClientPortalScreen();
       case '/team':
@@ -143,8 +187,16 @@ class _AppRootState extends State<_AppRoot> {
         return const AnalyticsScreen();
       case '/resources':
         return const ResourcesScreen();
+      case '/calculator':
+        return const CalculatorScreen();
+      case '/journeys':
+        return const JourneysScreen();
+      case '/rules':
+        return const RulesScreen();
+      // Messages / Calendar / Settings
       case '/activities/team-chat':
       case '/messages':
+      case '/marketing/inbox':
         return const MessagesScreen();
       case '/activities/calendar':
       case '/calendar':
