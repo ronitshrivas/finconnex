@@ -66,6 +66,7 @@ class _AppShellState extends State<AppShell> {
                             () => _sidebarCollapsed = !_sidebarCollapsed)
                         : null,
                     onSignOut: widget.onSignOut,
+                    onNavigate: widget.onNavigate,
                   ),
                   Expanded(child: widget.child),
                 ],

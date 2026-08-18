@@ -10,6 +10,7 @@ class TopBar extends StatelessWidget {
   final bool sidebarCollapsed;
   final VoidCallback? onToggleSidebar;
   final VoidCallback? onSignOut;
+  final ValueChanged<String>? onNavigate;
 
   const TopBar({
     super.key,
@@ -17,6 +18,7 @@ class TopBar extends StatelessWidget {
     this.sidebarCollapsed = false,
     this.onToggleSidebar,
     this.onSignOut,
+    this.onNavigate,
   });
 
   @override
@@ -65,7 +67,7 @@ class TopBar extends StatelessWidget {
           _TopAction(
               icon: Icons.chat_bubble_outline,
               badgeDot: true,
-              onTap: () {}),
+              onTap: () => onNavigate?.call('/activities/team-chat')),
           const SizedBox(width: 12),
           _TopAction(
               icon: Icons.notifications_none,
@@ -73,7 +75,9 @@ class TopBar extends StatelessWidget {
               onTap: () => _openNotifications(context)),
           if (!isMobile) ...[
             const SizedBox(width: 12),
-            _TopAction(icon: Icons.calendar_month_outlined, onTap: () {}),
+            _TopAction(
+                icon: Icons.calendar_month_outlined,
+                onTap: () => onNavigate?.call('/activities/calendar')),
           ],
           const SizedBox(width: 12),
           _UserChip(compact: isMobile, onSignOut: onSignOut),
