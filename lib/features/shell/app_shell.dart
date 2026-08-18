@@ -5,12 +5,12 @@ import '../../core/theme/app_colors.dart';
 import 'app_sidebar.dart';
 import 'top_bar.dart';
 
-/// Adaptive shell:
-///  - Desktop (>=1024): persistent left sidebar + top bar.
-///  - Tablet/mobile: hamburger opens the sidebar as a Drawer; compact top bar.
-class AppShell extends StatelessWidget {
+/// Adaptive shell with a collapsible desktop sidebar and a drawer on
+/// mobile/tablet.
+class AppShell extends StatefulWidget {
   final String currentRoute;
   final ValueChanged<String> onNavigate;
+  final VoidCallback? onSignOut;
   final Widget child;
 
   const AppShell({
@@ -18,36 +18,56 @@ class AppShell extends StatelessWidget {
     required this.currentRoute,
     required this.onNavigate,
     required this.child,
+    this.onSignOut,
   });
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  bool _sidebarCollapsed = false;
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = context.isDesktop;
+    final palette = AppPalette.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: palette.background,
       drawer: isDesktop
           ? null
           : Drawer(
-              backgroundColor: AppColors.sidebar,
+              backgroundColor: palette.sidebar,
               child: AppSidebar(
-                currentRoute: currentRoute,
+                currentRoute: widget.currentRoute,
                 onNavigate: (r) {
                   Navigator.of(context).pop();
-                  onNavigate(r);
+                  widget.onNavigate(r);
                 },
               ),
             ),
       body: SafeArea(
         child: Row(
           children: [
-            if (isDesktop)
-              AppSidebar(currentRoute: currentRoute, onNavigate: onNavigate),
+            if (isDesktop && !_sidebarCollapsed)
+              AppSidebar(
+                currentRoute: widget.currentRoute,
+                onNavigate: widget.onNavigate,
+              ),
             Expanded(
               child: Column(
                 children: [
-                  TopBar(showMenu: !isDesktop),
-                  Expanded(child: child),
+                  TopBar(
+                    showMenu: !isDesktop,
+                    sidebarCollapsed: _sidebarCollapsed,
+                    onToggleSidebar: isDesktop
+                        ? () => setState(
+                            () => _sidebarCollapsed = !_sidebarCollapsed)
+                        : null,
+                    onSignOut: widget.onSignOut,
+                  ),
+                  Expanded(child: widget.child),
                 ],
               ),
             ),

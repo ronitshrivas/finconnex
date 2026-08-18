@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_controller.dart';
 import 'features/activities/activities_screen.dart';
 import 'features/booking/booking_screen.dart';
 import 'features/client_portal/client_portal_screen.dart';
@@ -18,16 +19,31 @@ void main() {
   runApp(const FinConnexApp());
 }
 
-class FinConnexApp extends StatelessWidget {
+class FinConnexApp extends StatefulWidget {
   const FinConnexApp({super.key});
 
   @override
+  State<FinConnexApp> createState() => _FinConnexAppState();
+}
+
+class _FinConnexAppState extends State<FinConnexApp> {
+  final _theme = ThemeController();
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FinConnex',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      home: const _AppRoot(),
+    return ThemeScope(
+      controller: _theme,
+      child: AnimatedBuilder(
+        animation: _theme,
+        builder: (_, __) => MaterialApp(
+          title: 'FinConnex',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          themeMode: _theme.mode,
+          home: const _AppRoot(),
+        ),
+      ),
     );
   }
 }
@@ -88,6 +104,7 @@ class _AppRootState extends State<_AppRoot> {
     return AppShell(
       currentRoute: _route,
       onNavigate: _navigate,
+      onSignOut: () => setState(() => _signedIn = false),
       child: _pageFor(_route),
     );
   }

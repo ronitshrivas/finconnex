@@ -23,24 +23,20 @@ class _AppSidebarState extends State<AppSidebar> {
   @override
   void initState() {
     super.initState();
-    // Auto-expand the section that contains the current route.
-    for (final item in kNavItems) {
-      if (item.expandable &&
-          item.children.any((c) => c.route == widget.currentRoute)) {
-        _expanded.add(item.label);
-      }
-    }
+    _syncExpansion();
   }
 
   @override
   void didUpdateWidget(covariant AppSidebar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.currentRoute != widget.currentRoute) {
-      for (final item in kNavItems) {
-        if (item.expandable &&
-            item.children.any((c) => c.route == widget.currentRoute)) {
-          _expanded.add(item.label);
-        }
+    if (oldWidget.currentRoute != widget.currentRoute) _syncExpansion();
+  }
+
+  void _syncExpansion() {
+    for (final item in kNavItems) {
+      if (item.expandable &&
+          item.children.any((c) => c.route == widget.currentRoute)) {
+        _expanded.add(item.label);
       }
     }
   }
@@ -53,17 +49,18 @@ class _AppSidebarState extends State<AppSidebar> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
     return Container(
       width: 256,
-      decoration: const BoxDecoration(
-        color: AppColors.sidebar,
-        border: Border(right: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: palette.sidebar,
+        border: Border(right: BorderSide(color: palette.border)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _SidebarHeader(),
-          const Divider(height: 1),
+          _SidebarHeader(palette: palette),
+          Divider(height: 1, color: palette.border),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -75,26 +72,27 @@ class _AppSidebarState extends State<AppSidebar> {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.mutedForeground,
+                      color: palette.mutedForeground,
                       letterSpacing: 0.6,
                     ),
                   ),
                 ),
-                for (final item in kNavItems) _buildItem(item),
+                for (final item in kNavItems) _buildItem(item, palette),
               ],
             ),
           ),
-          const _SmartChat(),
+          _SmartChat(palette: palette),
         ],
       ),
     );
   }
 
-  Widget _buildItem(NavItem item) {
+  Widget _buildItem(NavItem item, AppPalette palette) {
     if (!item.expandable) {
       return _SidebarTile(
         item: item,
         selected: item.route == widget.currentRoute,
+        palette: palette,
         onTap: () {
           if (item.route != null) widget.onNavigate(item.route!);
         },
@@ -107,6 +105,7 @@ class _AppSidebarState extends State<AppSidebar> {
           item: item,
           selected: _isSectionActive(item),
           expanded: open,
+          palette: palette,
           onTap: () {
             setState(() {
               if (open) {
@@ -126,6 +125,7 @@ class _AppSidebarState extends State<AppSidebar> {
                   _SidebarSubTile(
                     item: child,
                     selected: child.route == widget.currentRoute,
+                    palette: palette,
                     onTap: () {
                       if (child.route != null) widget.onNavigate(child.route!);
                     },
@@ -139,28 +139,24 @@ class _AppSidebarState extends State<AppSidebar> {
 }
 
 class _SidebarHeader extends StatelessWidget {
-  const _SidebarHeader();
+  final AppPalette palette;
+  const _SidebarHeader({required this.palette});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 16),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'FinConnex',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.foreground,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            'FinConnex HQ',
-            style: TextStyle(fontSize: 12, color: AppColors.mutedForeground),
-          ),
+          Text('FinConnex',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: palette.foreground)),
+          const SizedBox(height: 4),
+          Text('FinConnex HQ',
+              style: TextStyle(fontSize: 12, color: palette.mutedForeground)),
         ],
       ),
     );
@@ -171,11 +167,13 @@ class _SidebarTile extends StatefulWidget {
   final NavItem item;
   final bool selected;
   final bool expanded;
+  final AppPalette palette;
   final VoidCallback onTap;
 
   const _SidebarTile({
     required this.item,
     required this.selected,
+    required this.palette,
     required this.onTap,
     this.expanded = false,
   });
@@ -190,10 +188,13 @@ class _SidebarTileState extends State<_SidebarTile> {
   @override
   Widget build(BuildContext context) {
     final selected = widget.selected;
-    final color = selected ? AppColors.primary : AppColors.foreground;
+    final p = widget.palette;
+    final color = selected ? AppColors.primary : p.foreground;
     final bg = selected
-        ? AppColors.primarySoft
-        : (_hover ? AppColors.hover : Colors.transparent);
+        ? (p.isDark
+            ? AppColors.darkPrimarySoft
+            : AppColors.primarySoft)
+        : (_hover ? p.hover : Colors.transparent);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
@@ -218,18 +219,15 @@ class _SidebarTileState extends State<_SidebarTile> {
                   style: TextStyle(
                     color: color,
                     fontSize: 13.5,
-                    fontWeight:
-                        selected ? FontWeight.w600 : FontWeight.w500,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                   ),
                 ),
               ),
               if (widget.item.expandable)
                 Icon(
-                    widget.expanded
-                        ? Icons.expand_less
-                        : Icons.expand_more,
+                    widget.expanded ? Icons.expand_less : Icons.expand_more,
                     size: 18,
-                    color: AppColors.mutedForeground),
+                    color: p.mutedForeground),
             ],
           ),
         ),
@@ -241,11 +239,13 @@ class _SidebarTileState extends State<_SidebarTile> {
 class _SidebarSubTile extends StatefulWidget {
   final NavItem item;
   final bool selected;
+  final AppPalette palette;
   final VoidCallback onTap;
 
   const _SidebarSubTile({
     required this.item,
     required this.selected,
+    required this.palette,
     required this.onTap,
   });
 
@@ -259,10 +259,11 @@ class _SidebarSubTileState extends State<_SidebarSubTile> {
   @override
   Widget build(BuildContext context) {
     final selected = widget.selected;
-    final color = selected ? AppColors.primary : AppColors.foreground;
+    final p = widget.palette;
+    final color = selected ? AppColors.primary : p.foreground;
     final bg = selected
-        ? AppColors.primarySoft
-        : (_hover ? AppColors.hover : Colors.transparent);
+        ? (p.isDark ? AppColors.darkPrimarySoft : AppColors.primarySoft)
+        : (_hover ? p.hover : Colors.transparent);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
@@ -292,29 +293,30 @@ class _SidebarSubTileState extends State<_SidebarSubTile> {
 }
 
 class _SmartChat extends StatelessWidget {
-  const _SmartChat();
+  final AppPalette palette;
+  const _SmartChat({required this.palette});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: palette.border)),
       ),
       child: TextField(
-        style: const TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 12, color: palette.foreground),
         decoration: InputDecoration(
           hintText: 'Here is your Smart Chat (Ctrl+Space)',
-          hintStyle: const TextStyle(fontSize: 12, color: AppColors.subtleText),
+          hintStyle: TextStyle(fontSize: 12, color: palette.subtleText),
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.inputBorder),
+            borderSide: BorderSide(color: palette.inputBorder),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.inputBorder),
+            borderSide: BorderSide(color: palette.inputBorder),
           ),
         ),
       ),
